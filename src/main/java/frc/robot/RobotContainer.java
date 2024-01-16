@@ -1,5 +1,8 @@
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -29,9 +32,25 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-
+    private final JoystickButton intakeOn = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton outtakeOn = new JoystickButton(driver, XboxController.Button.kY.value);
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+
+    private final TalonFX intake = new TalonFX(62);
+
+    private void intakeOnCommand() {
+        intake.set(0.95);
+    }
+     private void intakeOffCommand() {
+        intake.set(0);
+    }
+    private void outakeOnCommand() {
+        intake.set(-0.75);
+    }
+     private void outakeOffCommand() {
+        intake.set(0);
+    }
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,6 +78,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        intakeOn.onTrue(new InstantCommand(() -> intakeOnCommand()));
+        outtakeOn.onTrue(new InstantCommand(() -> outakeOnCommand()));
+       
+        intakeOn.onFalse(new InstantCommand(() -> intakeOffCommand()));
+        outtakeOn.onFalse(new InstantCommand(() -> outakeOffCommand()));
     }
 
     /**
