@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -34,16 +35,24 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton intakeOn = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton outtakeOn = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton shooterOn = new JoystickButton(driver, XboxController.Button.kX.value);
+    //private final JoystickButton shootinOn = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton wristUpOn = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton wristDownOn = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     /* Subsystems */
+    
     private final Swerve s_Swerve = new Swerve();
 
-    private final TalonFX intake = new TalonFX(62);
+    private final TalonFX intake = new TalonFX(17);
+    
 
     private void intakeOnCommand() {
         intake.set(0.95);
+        
     }
      private void intakeOffCommand() {
         intake.set(0);
+        
     }
     private void outakeOnCommand() {
         intake.set(-0.75);
@@ -51,6 +60,40 @@ public class RobotContainer {
      private void outakeOffCommand() {
         intake.set(0);
     }
+
+    
+    private final TalonFX shooter = new TalonFX(13);
+    private final Spark shooterLeft = new Spark(20);
+    private final Spark shooterRight = new Spark(21);
+
+    private void shooterOnCommand() {
+        shooter.set(0.25);
+        shooterLeft.set(0.25);
+        shooterRight.set(0.25);
+    }
+     private void shooterOffCommand() {
+        shooter.set(0);
+        shooterLeft.set(0);
+        shooterRight.set(0);
+    }
+  
+
+    private final TalonFX wrist = new TalonFX(49);
+
+    private void wristUpOnCommand() {
+        wrist.set(0.2);
+    }
+     private void wristUpOffCommand() {
+        wrist.set(0);
+    }
+    private void wristDownOnCommand() {
+        wrist.set(-0.2);
+    }
+     private void wristDownOffCommand() {
+        wrist.set(0);
+    }
+
+
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -83,6 +126,17 @@ public class RobotContainer {
        
         intakeOn.onFalse(new InstantCommand(() -> intakeOffCommand()));
         outtakeOn.onFalse(new InstantCommand(() -> outakeOffCommand()));
+        
+        shooterOn.onTrue(new InstantCommand(() -> shooterOnCommand()));
+
+        shooterOn.onFalse(new InstantCommand(() -> shooterOffCommand()));
+
+        wristUpOn.onTrue(new InstantCommand(() -> wristUpOnCommand()));
+        wristUpOn.onFalse(new InstantCommand(() -> wristUpOffCommand()));
+
+        wristDownOn.onTrue(new InstantCommand(() -> wristDownOnCommand()));
+        wristDownOn.onFalse(new InstantCommand(() -> wristDownOffCommand()));
+
     }
 
     /**
